@@ -1,0 +1,3 @@
+ALTER TABLE au_userinfo
+    ADD CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES au_role(id)
+        ON DELETE NO ACTION ON UPDATE CASCADE;
