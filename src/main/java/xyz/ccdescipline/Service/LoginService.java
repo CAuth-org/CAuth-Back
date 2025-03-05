@@ -2,11 +2,15 @@ package xyz.ccdescipline.Service;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import xyz.ccdescipline.DTO.Login.reqLogin;
+import xyz.ccdescipline.DTO.Login.resLogin;
 import xyz.ccdescipline.Mapper.AuUserInfoMapper;
 import xyz.ccdescipline.Model.AuUserInfo;
+import xyz.ccdescipline.Util.Response;
 import xyz.ccdescipline.VO.RedisVO.Login.LoginRedisKey;
 import xyz.ccdescipline.VO.RedisVO.Login.LoginRedisValue;
 
@@ -16,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hutool.crypto.SecureUtil;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LoginService {
@@ -26,14 +31,14 @@ public class LoginService {
     private final RedisTemplate< LoginRedisKey,LoginRedisValue> loginRedisTemplate;
     private final AuUserInfoMapper auUserInfoMapper;
 
-    public String Login(String username, String password){
-        AuUserInfo auUserInfo = auUserInfoMapper.selectUserByUsername(username);
+    public Response<resLogin> Login(reqLogin login){
+        AuUserInfo auUserInfo = auUserInfoMapper.selectUserByUsername(login.getUsername());
         if(Objects.isNull(auUserInfo)){
-            return null;
+            return Response.error("auth is fail");
         }
 
-        if(!auUserInfo.getPassword().equals( DigestUtil.md5Hex(password + auUserInfo.getSalt()) )){
-            return null;
+        if(!auUserInfo.getPassword().equals( DigestUtil.md5Hex(login.getPassword() + auUserInfo.getSalt()) )){
+            return Response.error("auth is fail");
         }
 
 
@@ -43,7 +48,7 @@ public class LoginService {
                 ExpireTime, TimeUnit.SECONDS
         );
 
-        return token;
+        return Response.success(new resLogin(token,auUserInfo.getRole().getRoleName()));
     }
 
     public LoginRedisValue getTokenInfo(String token){
