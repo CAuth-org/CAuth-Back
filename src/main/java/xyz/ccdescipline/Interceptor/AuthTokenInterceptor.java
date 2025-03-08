@@ -10,6 +10,9 @@ import xyz.ccdescipline.VO.RedisVO.Login.LoginRedisValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -21,8 +24,12 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
 
+        List<String> whitelistURL = Arrays.asList(new String[]{"/login", "/version"});
         // 放行 /login 请求
-        if (requestURI.startsWith("/login")) {
+//        if (requestURI.startsWith("/login")) {
+//            return true;
+//        }
+        if(whitelistURL.contains(requestURI)){
             return true;
         }
 
