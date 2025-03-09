@@ -11,6 +11,7 @@ import xyz.ccdescipline.Service.LoginService;
 import xyz.ccdescipline.Util.Response;
 import xyz.ccdescipline.VO.RedisVO.Login.LoginRedisValue;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @Log4j2
@@ -22,6 +23,11 @@ public class LoginController {
     @PostMapping("/login")
     public Response login( reqLogin reqLogin) {
         return loginService.Login(reqLogin);
+    }
+
+    @PostMapping("/logout")
+    public Response logout(HttpServletRequest request){
+        return loginService.Logout(request.getHeader("Authorization"));
     }
 
     @GetMapping("/auth/{token}")

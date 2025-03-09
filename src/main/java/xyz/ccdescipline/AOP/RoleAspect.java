@@ -33,13 +33,13 @@ public class RoleAspect {
         Set<String> requiredRoles = new HashSet<>();
         // 解析 @Role
         if (accessibleObject.isAnnotationPresent(Role.class)) {
-            requiredRoles.add(accessibleObject.getAnnotation(Role.class).value());
+            requiredRoles.add(accessibleObject.getAnnotation(Role.class).value().getRoleName());
         }
 
         // 解析 @Roles
         if (accessibleObject.isAnnotationPresent(Roles.class)) {
             Role[] roles = accessibleObject.getAnnotation(Roles.class).value();
-            requiredRoles.addAll(Arrays.stream(roles).map(Role::value).toList());
+            requiredRoles.addAll(Arrays.stream(roles).map(role -> role.value().getRoleName()).toList());
         }
 
         return requiredRoles;

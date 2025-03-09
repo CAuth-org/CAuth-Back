@@ -2,21 +2,22 @@ package xyz.ccdescipline.Controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.ccdescipline.Constant.RoleEnum;
 import xyz.ccdescipline.Util.Response;
 import xyz.ccdescipline.annotation.Role;
 import xyz.ccdescipline.annotation.Roles;
 
-@Role("user")
+//@Role(RoleEnum.ADMIN)
 @RestController
 public class TestRoleController {
 
-    @Role("admin")
+    @Role(RoleEnum.ADMIN)
     @GetMapping("/admin")
     public Response testAdmin(){
         return Response.success("admin Role");
     }
 
-//    @Roles({@Role("user"),@Role("admin")})
+   @Roles({@Role(RoleEnum.USER)})
     @GetMapping("/user")
     public Response testUser(){
         return Response.success("user Role");

@@ -1,9 +1,9 @@
 name: Deploy CAuth to Server
 
 on:
-  push:
-    branches:
-      - main  # 当代码推送到 main 分支时触发
+#  push:
+#    branches:
+#      - main  # 当代码推送到 main 分支时触发
   workflow_dispatch:
 
 jobs:

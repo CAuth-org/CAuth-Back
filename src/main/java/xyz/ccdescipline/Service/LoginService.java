@@ -54,4 +54,10 @@ public class LoginService {
     public LoginRedisValue getTokenInfo(String token){
         return loginRedisTemplate.opsForValue().get(new LoginRedisKey(token));
     }
+
+    public Response Logout(String authorization) {
+        return Boolean.TRUE.equals(loginRedisTemplate.delete(new LoginRedisKey(authorization)))
+                ? Response.success("logout success")
+                : Response.error("logout fail");
+    }
 }
