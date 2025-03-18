@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
+import xyz.ccdescipline.Constant.ResponseEnum;
+import xyz.ccdescipline.Exception.ResponseException;
 import xyz.ccdescipline.Service.LoginService;
 import xyz.ccdescipline.VO.RedisVO.Login.LoginRedisValue;
 
@@ -24,7 +26,7 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
 
-        List<String> whitelistURL = Arrays.asList(new String[]{"/login", "/version"});
+        List<String> whitelistURL = Arrays.asList(new String[]{"/login"});
         // 放行 /login 请求
 //        if (requestURI.startsWith("/login")) {
 //            return true;
@@ -36,13 +38,14 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
         // 获取 Authorization 头部
         String token = request.getHeader("Authorization");
         if (token == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token missing");
+            throw new ResponseException(ResponseEnum.AUTH_FAIL);
         }
 
         // 解析 Token 并检查是否有效
         LoginRedisValue tokenInfo = loginService.getTokenInfo(token);
         if (Objects.isNull(tokenInfo)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            loginService.Logout(token);
+            throw new ResponseException(ResponseEnum.AUTH_FAIL);
         }
 
         return true; // 允许请求通过

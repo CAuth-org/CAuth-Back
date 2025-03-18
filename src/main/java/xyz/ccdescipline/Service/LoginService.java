@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import xyz.ccdescipline.Constant.ResponseEnum;
 import xyz.ccdescipline.DTO.Login.reqLogin;
 import xyz.ccdescipline.DTO.Login.resLogin;
+import xyz.ccdescipline.Exception.ResponseException;
 import xyz.ccdescipline.Mapper.AuUserInfoMapper;
 import xyz.ccdescipline.Model.AuUserInfo;
 import xyz.ccdescipline.Util.Response;
@@ -31,14 +33,14 @@ public class LoginService {
     private final RedisTemplate< LoginRedisKey,LoginRedisValue> loginRedisTemplate;
     private final AuUserInfoMapper auUserInfoMapper;
 
-    public Response<resLogin> Login(reqLogin login){
+    public Response<resLogin> Login(reqLogin login) throws ResponseException {
         AuUserInfo auUserInfo = auUserInfoMapper.selectUserByUsername(login.getUsername());
         if(Objects.isNull(auUserInfo)){
-            return Response.error("auth is fail");
+            throw new ResponseException(ResponseEnum.AUTH_FAIL);
         }
 
         if(!auUserInfo.getPassword().equals( DigestUtil.md5Hex(login.getPassword() + auUserInfo.getSalt()) )){
-            return Response.error("auth is fail");
+            throw new ResponseException(ResponseEnum.AUTH_FAIL);
         }
 
 
