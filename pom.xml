@@ -121,7 +121,10 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.7.0</version>  <!-- 适用于 Spring Boot 2.x -->
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
 
 
     </dependencies>
