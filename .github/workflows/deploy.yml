@@ -1,40 +1,21 @@
-name: Deploy CAuth to Server
+name: Manual Maven Build
 
 on:
-#  push:
-#    branches:
-#      - main  # 当代码推送到 main 分支时触发
-  workflow_dispatch:
+  workflow_dispatch:  # 👈 启用手动触发
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4  # 获取最新代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests  # 生成 JAR 文件
-
-      - name: Copy JAR to Server
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-          scp -o StrictHostKeyChecking=no -i private_key target/CAuth-1.0-SNAPSHOT.jar root@${{ secrets.SERVER_IP }}:/www/wwwroot/CAuth/
-          rm -f private_key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Restart Service on Server
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key root@${{ secrets.SERVER_IP }} "systemctl restart cauth"
-          rm -f private_key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: mvn clean package -DskipTests
