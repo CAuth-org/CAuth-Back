@@ -1,7 +1,7 @@
-name: Manual Maven Build
+name: Manual Maven Build to Artifacts
 
 on:
-  workflow_dispatch:  # 👈 启用手动触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,11 +11,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17  # 改成你的 JDK 版本
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
+
+      - name: Upload .jar to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-jar
+          path: target/*.jar
