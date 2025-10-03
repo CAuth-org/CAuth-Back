@@ -1,6 +1,7 @@
 package xyz.ccdescipline.Controller;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 import xyz.ccdescipline.DTO.Login.reqLogin;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @Log4j2
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class LoginController {
     public final LoginService loginService;

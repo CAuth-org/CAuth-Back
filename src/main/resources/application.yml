@@ -13,4 +13,4 @@ mybatis-plus:
   mapper-locations: classpath:/mappers/**/*.xml  # 扫描 mappers 文件夹下的所有 XML 文件
 
 CAuth:
-  Login-ExpireTime : 100
+  Login-ExpireTime : 10000000
